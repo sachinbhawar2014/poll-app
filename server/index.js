@@ -15,10 +15,10 @@ const app = express();
 app.use(express.json());
 app.use(
     cors({
-        origin: "*",
-        credentials: false, // Important: must be false when using wildcard
+        origin: "http://localhost:3700",
         methods: ["GET", "POST", "PUT", "DELETE"],
         allowedHeaders: ["Content-Type", "Authorization"],
+        preflightContinue: false,
     })
 );
 

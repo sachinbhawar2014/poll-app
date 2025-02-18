@@ -11,6 +11,7 @@ const Home = () => {
 
     useEffect(() => {
         fetch("https://poll-app-7tos.onrender.com/", {
+            method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
