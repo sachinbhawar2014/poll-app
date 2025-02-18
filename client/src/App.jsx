@@ -1,7 +1,7 @@
-import React, { Suspense, useCallback, useEffect, useRef, useState } from "react";
+import React, { Suspense, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import PollContextProvider from "./context/PollContext";
 import "./App.css";
+import { PollContext } from "./context/PollContext";
 
 const Home = React.lazy(() => import("./pages/Home"));
 const New = React.lazy(() => import("./pages/New"));
@@ -10,6 +10,7 @@ const All = React.lazy(() => import("./pages/All"));
 function App() {
     console.log("app component loaded");
     const inputRef = useRef(null);
+    const { userEmail, setUserEmail } = useContext(PollContext);
 
     const handleSubmit = useCallback((e) => {
         e.preventDefault();
@@ -26,10 +27,6 @@ function App() {
     const handleChange = useCallback((e) => {
         inputRef.current = e.target;
     }, []);
-
-    useEffect(() => {
-        const responce = axios.create();
-    }, [userEmail]);
 
     if (!userEmail) {
         return (
@@ -60,17 +57,15 @@ function App() {
 
     return (
         <div className="w-full h-full flex flex-col items-center">
-            <PollContextProvider>
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Router>
-                        <Routes>
-                            <Route path="/" element={<Home />} />
-                            <Route path="/new" element={<New />} />
-                            <Route path="/all" element={<All />} />
-                        </Routes>
-                    </Router>
-                </Suspense>
-            </PollContextProvider>
+            <Suspense fallback={<div>Loading...</div>}>
+                <Router>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/new" element={<New />} />
+                        <Route path="/all" element={<All />} />
+                    </Routes>
+                </Router>
+            </Suspense>
         </div>
     );
 }
