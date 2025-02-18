@@ -1,10 +1,10 @@
 import axios from "axios";
-import { configDotenv } from "dotenv";
+// import { configDotenv } from "dotenv";
 
-configDotenv();
+// configDotenv();
 
 const axiosInstance = axios.create({
-    baseURL: process.env.REACT_APP_API_URL,
+    baseURL: "http://localhost:3600",
     withCredentials: true, // ✅ Including cookies in requests
     headers: {
         "Content-Type": "application/json",
