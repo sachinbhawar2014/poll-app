@@ -1,7 +1,7 @@
 import React, { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import PollContextProvider from "./context/PollContext";
 import "./App.css";
-import axios from "axios";
 
 const Home = React.lazy(() => import("./pages/Home"));
 const New = React.lazy(() => import("./pages/New"));
@@ -9,9 +9,6 @@ const All = React.lazy(() => import("./pages/All"));
 
 function App() {
     console.log("app component loaded");
-    const [currentPoll, setCurrentPoll] = useState("");
-    const [userEmail, setUserEmail] = useState("");
-    const [userResponse, setUserResponse] = useState([]);
     const inputRef = useRef(null);
 
     const handleSubmit = useCallback((e) => {
@@ -31,14 +28,14 @@ function App() {
     }, []);
 
     useEffect(() => {
-        const responce = axios.;
+        const responce = axios.create();
     }, [userEmail]);
 
     if (!userEmail) {
         return (
             <div className="w-full h-full flex flex-col items-center">
                 <div className="flex flex-col absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <div>
+                    <div className="w-[300px]">
                         <h3>Welcome to quick poll portal! Please Enter your email.</h3>
                     </div>
                     <form className="p-2 rounded-md flex flex-col gap-2" onSubmit={handleSubmit}>
@@ -63,15 +60,17 @@ function App() {
 
     return (
         <div className="w-full h-full flex flex-col items-center">
-            <Suspense fallback={<div>Loading...</div>}>
-                <Router>
-                    <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/new" element={<New />} />
-                        <Route path="/all" element={<All />} />
-                    </Routes>
-                </Router>
-            </Suspense>
+            <PollContextProvider>
+                <Suspense fallback={<div>Loading...</div>}>
+                    <Router>
+                        <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/new" element={<New />} />
+                            <Route path="/all" element={<All />} />
+                        </Routes>
+                    </Router>
+                </Suspense>
+            </PollContextProvider>
         </div>
     );
 }
