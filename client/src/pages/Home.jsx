@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import axiosInstance from "../api/axiosinstance";
-import { PollContext } from "../context/pollcontext";
+import { PollContext } from "../context/PollContext";
 
 const Home = () => {
     const { currentPoll, setCurrentPoll } = useContext(PollContext);
