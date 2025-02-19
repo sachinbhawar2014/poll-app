@@ -3,7 +3,7 @@ import { createContext, useState } from "react";
 export const PollContext = createContext();
 
 const PollContextProvider = ({ children }) => {
-    const [currentPoll, setCurrentPoll] = useState("");
+    const [currentPoll, setCurrentPoll] = useState({});
     const [userEmail, setUserEmail] = useState("");
     const [userResponse, setUserResponse] = useState([]);
 

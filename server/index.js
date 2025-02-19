@@ -16,21 +16,9 @@ app.use(express.json());
 
 // ✅ CORRECT CORS CONFIG
 
-// const allowedOrigins = [
-//     "http://localhost:3700", // Add your frontend URL here
-//     // "https://your-frontend.com", // Add production frontend domain
-// ];
-
 app.use(
     cors({
         origin: "*",
-        // (origin, callback) => {
-        //     if (!origin || allowedOrigins.includes(origin)) {
-        //         callback(null, origin); // Allow the specific origin
-        //     } else {
-        //         callback(new Error("Not allowed by CORS"));
-        //     }
-        // },
         methods: ["GET", "POST", "PUT", "DELETE"],
         allowedHeaders: ["Content-Type", "Authorization"],
     })
