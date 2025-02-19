@@ -13,23 +13,27 @@ import {
 const app = express();
 
 app.use(express.json());
+
+// ✅ CORRECT CORS CONFIG
 app.use(
     cors({
-        origin: "http://localhost:3700", // Allow only your frontend origin
+        origin: "http://localhost:3700",
         methods: ["GET", "POST", "PUT", "DELETE"],
         allowedHeaders: ["Content-Type", "Authorization"],
-        credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+        credentials: true, // Allow credentials (cookies, auth headers)
     })
 );
 
-app.use((req, res, next) => {
+// ✅ Handle Preflight Requests
+app.options("*", (req, res) => {
     res.header("Access-Control-Allow-Origin", "http://localhost:3700");
-    res.header("Access-Control-Allow-Credentials", "true"); // Allow cookies/sessions
+    res.header("Access-Control-Allow-Credentials", "true");
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    next();
+    res.sendStatus(204);
 });
 
+// ✅ Define Routes
 app.post("/new", createPoll);
 app.get("/", getCurrentQuestion);
 app.get("/all", getAllQuestions);
