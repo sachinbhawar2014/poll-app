@@ -8,7 +8,6 @@ export const getCurrentQuestionRepo = async () => {
         if (currentPoll.length == 0) throw new Error("Current poll not found");
 
         const question = await pollModel.findById(currentPoll[0].questionId);
-        console.log(question);
 
         return question;
     } catch (error) {
