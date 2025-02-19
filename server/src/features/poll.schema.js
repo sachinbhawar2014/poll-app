@@ -12,6 +12,7 @@ const pollSchema = new mongoose.Schema(
     {
         question: String,
         answers: [answerSchema],
+        acceptMultipleOptions: { type: Boolean, default: false, required: true },
     },
     { collection: "Poll" }
 );
