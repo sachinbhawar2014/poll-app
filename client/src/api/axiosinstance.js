@@ -4,7 +4,7 @@ import axios from "axios";
 // configDotenv();
 
 const axiosInstance = axios.create({
-    baseURL: "http://localhost:3600",
+    baseURL: "https://poll-app-7tos.onrender.com",
     withCredentials: true, // ✅ Including cookies in requests
     headers: {
         "Content-Type": "application/json",

@@ -15,10 +15,10 @@ const app = express();
 app.use(express.json());
 app.use(
     cors({
-        origin: "http://localhost:3700",
+        origin: "http://localhost:3700", // Allow only your frontend origin
         methods: ["GET", "POST", "PUT", "DELETE"],
         allowedHeaders: ["Content-Type", "Authorization"],
-        preflightContinue: false,
+        credentials: true, // Allow credentials (cookies, authorization headers, etc.)
     })
 );
 
