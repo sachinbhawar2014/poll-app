@@ -8,13 +8,21 @@ const Home = () => {
     useEffect(() => {
         const fetchPoll = async () => {
             try {
-                const result = await axiosInstance.get("/");
-                setCurrentPoll(result.data);
-                console.log(result.data);
+                const response = await axiosInstance.get("/");
+                console.log("Fetched Data:", response.data);
+                setCurrentPoll(response.data);
             } catch (error) {
-                console.error("Error fetching poll data:", error);
+                if (error.response) {
+                    console.error("Server responded with error:", error.response.data);
+                    console.error("Status Code:", error.response.status);
+                } else if (error.request) {
+                    console.error("No response received:", error.request);
+                } else {
+                    console.error("Error setting up request:", error.message);
+                }
             }
         };
+
         fetchPoll();
     }, []);
 
