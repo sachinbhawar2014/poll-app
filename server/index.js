@@ -15,14 +15,24 @@ const app = express();
 app.use(express.json());
 
 // ✅ CORRECT CORS CONFIG
+
+const allowedOrigins = [
+    "http://localhost:3700", // Add your frontend URL here
+    // "https://your-frontend.com", // Add production frontend domain
+];
+
 app.use(
     cors({
         origin: (origin, callback) => {
-            callback(null, origin || "*"); // Allow all origins dynamically
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, origin); // Allow the specific origin
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
         },
         methods: ["GET", "POST", "PUT", "DELETE"],
         allowedHeaders: ["Content-Type", "Authorization"],
-        credentials: true,
+        credentials: true, // ✅ Required when using `withCredentials: true`
     })
 );
 
