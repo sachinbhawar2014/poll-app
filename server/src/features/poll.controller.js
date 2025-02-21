@@ -113,6 +113,7 @@ export const createPoll = async (req, res) => {
     try {
         const question = req.body.question;
         const ansArr = req.body.answers;
+        const acceptMultipleOptions = req.body.acceptMultipleOptions;
 
         console.log(ansArr);
 
@@ -121,7 +122,7 @@ export const createPoll = async (req, res) => {
         });
 
         console.log("this", answers);
-        const newAddedPoll = await createPollRepo({ question, answers });
+        const newAddedPoll = await createPollRepo({ question, answers, acceptMultipleOptions });
 
         return res.status(201).json({
             success: true,

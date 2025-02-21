@@ -10,7 +10,7 @@ const All = React.lazy(() => import("./pages/All"));
 function App() {
     console.log("app component loaded");
     const inputRef = useRef(null);
-    const { userEmail, setUserEmail } = useContext(PollContext);
+    const { userEmail, setUserEmail, error, setError } = useContext(PollContext);
 
     const handleSubmit = useCallback((e) => {
         e.preventDefault();
@@ -30,33 +30,30 @@ function App() {
 
     if (!userEmail) {
         return (
-            <div className="w-full h-full flex flex-col items-center">
-                <div className="flex flex-col absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <div className="w-[300px]">
-                        <h3>Welcome to quick poll portal! Please Enter your email.</h3>
-                    </div>
-                    <form className="p-2 rounded-md flex flex-col gap-2" onSubmit={handleSubmit}>
-                        <input
-                            className="bg-gray-600 p-2 rounded-md text-white"
-                            type="email"
-                            placeholder="enter your email"
-                            onChange={handleChange}
-                            ref={inputRef}
-                        ></input>
-                        <button
-                            type="submit"
-                            className="bg-green-500 text-blue-700 p-2 rounded-md hover:text-red-600 hover:font-bold transition ease-in 0.2s"
-                        >
-                            Submit
-                        </button>
-                    </form>
-                </div>
+            <div className="flex flex-col items-center p-4 border rounded-lg shadow-lg w-80 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <h2 className="text-xl font-semibold mb-4">Welcome to Quick poll app. Enter Your Email</h2>
+                <form onSubmit={handleSubmit} className="w-full">
+                    <input
+                        type="email"
+                        onChange={handleChange}
+                        placeholder="Enter your email"
+                        className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                    />
+                    {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+                    <button
+                        type="submit"
+                        className="mt-4 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
+                    >
+                        Submit
+                    </button>
+                </form>
             </div>
         );
     }
 
     return (
-        <div className="w-full h-full flex flex-col items-center">
+        <div className="w-full h-[100vh] flex flex-col items-center">
             <Suspense fallback={<div>Loading...</div>}>
                 <Router>
                     <Routes>

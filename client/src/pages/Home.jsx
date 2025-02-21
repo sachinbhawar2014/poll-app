@@ -1,59 +1,94 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axiosInstance from "../api/axiosinstance";
 import { PollContext } from "../context/PollContext";
 
 const Home = () => {
-    const { currentPoll, setCurrentPoll } = useContext(PollContext);
+    const [loading, setLoading] = useState(false);
+    const { currentPoll, setCurrentPoll, error, setError, selectedAnswers, setSelectedAnswers } =
+        useContext(PollContext);
 
     useEffect(() => {
-        const fetchPoll = async () => {
+        const fetchData = async () => {
+            setLoading(true);
             try {
-                const response = await axiosInstance.get("/");
-                console.log("Fetched Data:", response.data.data);
-                setCurrentPoll(response.data.data);
-            } catch (error) {
-                if (error.response) {
-                    console.error("Server responded with error:", error.response.data);
-                    console.error("Status Code:", error.response.status);
-                } else if (error.request) {
-                    console.error("No response received:", error.request);
-                } else {
-                    console.error("Error setting up request:", error.message);
-                }
+                const responce = await fetch("https://poll-app-nies.onrender.com/", { method: "GET" });
+                if (!responce.ok) setError("Error Occured while fetching data from backend");
+                const dataFromServer = await responce.json();
+                console.log(dataFromServer);
+                setCurrentPoll(dataFromServer.data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
             }
         };
 
-        fetchPoll();
+        fetchData();
     }, []);
 
+    const handleSubmit = (e) =>{
+
+    }
+
+    const handleChange = (event) => {
+        const { value } = event.target;
+
+        console.log(currentPoll, selectedAnswers);
+        if (currentPoll.acceptMultipleOptions) {
+            // For multiple-choice, toggle selection
+            setSelectedAnswers((prev) =>
+                prev.includes(value) ? prev.filter((ans) => ans !== value) : [...prev, value]
+            );
+        } else {
+            // For single choice, replace selected answer
+            setSelectedAnswers([value]);
+        }
+    };
+
+    if (error) {
+        return <div className="">{error}</div>;
+    }
+
     return (
-        <>Homepage</>
-        // <div className="p-4 border rounded-lg shadow-lg">
-        //     <h3 className="text-lg font-semibold mb-2">{currentPoll.question}</h3>
-        //     <div className="flex flex-col space-y-2">
-        //         {currentPoll.answers.map((answer, index) => (
-        //             <label key={index} className="flex items-center space-x-2">
-        //                 <input
-        //                     type={currentPoll.acceptMultipleOptions ? "checkbox" : "radio"}
-        //                     name="question"
-        //                     value={answer.option}
-        //                     checked={
-        //                         currentPoll.acceptMultipleOptions
-        //                             ? selectedAnswers.includes(answer.option)
-        //                             : selectedAnswers === answer.option
-        //                     }
-        //                     onChange={handleChange}
-        //                     className="w-4 h-4"
-        //                 />
-        //                 <span>{answer.option}</span>
-        //             </label>
-        //         ))}
-        //     </div>
-        //     <div className="mt-4">
-        //         <strong>Selected Answer(s):</strong>{" "}
-        //         {/* {currentPoll.acceptMultipleOptions ? selectedAnswers.join(", ") : selectedAnswers} */}
-        //     </div>
-        // </div>
+        <div className="p-4 border rounded-lg shadow-lg bg-amber-200 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+            {loading ? (
+                <div className="">Loading...</div>
+            ) : (
+                <div>
+                    <h3 className="text-lg font-semibold mb-2">{currentPoll?.question}</h3>
+                    <form onSubmit={handleSubmit}>
+                        <div className="flex flex-col p-4 gap-0.5">
+                            {Array.isArray(currentPoll?.answers) &&
+                                currentPoll.answers.map((ans, index) => (
+                                    <div key={index}>
+                                        <input
+                                            id={`{index}`}
+                                            className="border-4 border-transparent appearance-none"
+                                            type={currentPoll.acceptMultipleOptions ? "checkbox" : "radio"}
+                                            name="question"
+                                            value={ans.option}
+                                            checked={selectedAnswers.includes(ans.option) || false}
+                                            onChange={handleChange}
+                                        />
+                                        <label
+                                            htmlFor={`{index}`}
+                                            className="flex items-center space-x-2 border-2 border-blue-600 p-6 checked:border-red-500"
+                                        >
+                                            <span>{ans.option}</span>
+                                        </label>
+                                    </div>
+                                ))}
+                        </div>
+                        <button type="submit" className="p-2">
+                            Submit Responce
+                        </button>
+                    </form>
+                    <div className="mt-4">
+                        <strong>Selected Answer(s):</strong>{" "}
+                    </div>
+                </div>
+            )}
+        </div>
     );
 };
 
